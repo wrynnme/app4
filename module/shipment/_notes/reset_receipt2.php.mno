@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<info>
+	<infoitem key="UD_search_reset_bill" value="name:id;datatype:int,name:receipt_id;datatype:blob,name:receipt_date;datatype:date,name:customer_id;datatype:blob,name:shipment_id;datatype:blob,name:billing_id;datatype:blob,name:transaction_date;datatype:date,name:amount;datatype:real,name:amount2;datatype:real,name:amount3;datatype:real,name:vat;datatype:real,name:total;datatype:real,name:round_shipment;datatype:blob" />
+</info>

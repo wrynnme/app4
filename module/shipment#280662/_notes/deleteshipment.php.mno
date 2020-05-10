@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<info>
+	<infoitem key="UD_delete_shipment" value="name:id;datatype:int,name:transaction_date;datatype:date,name:product_payment_id;datatype:blob,name:product_id;datatype:blob,name:type_product;datatype:blob,name:productsource;datatype:blob,name:customer_id;datatype:blob,name:customer_name;datatype:blob,name:customer_destination;datatype:blob,name:product_dateout;datatype:date,name:drivermember_id;datatype:blob,name:car_id;datatype:blob,name:car_type;datatype:blob,name:product_amount;datatype:int,name:rate_pricein_type1;datatype:int,name:rate_priceout_type1;datatype:int,name:rate_pricein_type2;datatype:int,name:rate_priceout_type2;datatype:int,name:rate_pricein_type3;datatype:int,name:rate_priceout_type3;datatype:int,name:status;datatype:int" />
+</info>

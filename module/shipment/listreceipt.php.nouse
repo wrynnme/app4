@@ -1,0 +1,129 @@
+<?php require_once('Connections/ml.php'); ?>
+<?php
+if (!function_exists("GetSQLValueString")) {
+function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
+{
+  if (PHP_VERSION < 6) {
+    $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
+  }
+
+  $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
+
+  switch ($theType) {
+    case "text":
+      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+      break;    
+    case "long":
+    case "int":
+      $theValue = ($theValue != "") ? intval($theValue) : "NULL";
+      break;
+    case "double":
+      $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
+      break;
+    case "date":
+      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+      break;
+    case "defined":
+      $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
+      break;
+  }
+  return $theValue;
+}
+}
+
+$currentPage = $_SERVER["PHP_SELF"];
+
+$maxRows_listbilling = 50;
+$pageNum_listbilling = 0;
+if (isset($_GET['pageNum_listbilling'])) {
+  $pageNum_listbilling = $_GET['pageNum_listbilling'];
+}
+$startRow_listbilling = $pageNum_listbilling * $maxRows_listbilling;
+
+mysql_select_db($database_ml, $ml);
+$query_listbilling = "SELECT DISTINCT billing_id FROM receipt ORDER BY id DESC";
+$query_limit_listbilling = sprintf("%s LIMIT %d, %d", $query_listbilling, $startRow_listbilling, $maxRows_listbilling);
+$listbilling = mysql_query($query_limit_listbilling, $ml) or die(mysql_error());
+$row_listbilling = mysql_fetch_assoc($listbilling);
+
+if (isset($_GET['totalRows_listbilling'])) {
+  $totalRows_listbilling = $_GET['totalRows_listbilling'];
+} else {
+  $all_listbilling = mysql_query($query_listbilling);
+  $totalRows_listbilling = mysql_num_rows($all_listbilling);
+}
+$totalPages_listbilling = ceil($totalRows_listbilling/$maxRows_listbilling)-1;
+
+$queryString_listbilling = "";
+if (!empty($_SERVER['QUERY_STRING'])) {
+  $params = explode("&", $_SERVER['QUERY_STRING']);
+  $newParams = array();
+  foreach ($params as $param) {
+    if (stristr($param, "pageNum_listbilling") == false && 
+        stristr($param, "totalRows_listbilling") == false) {
+      array_push($newParams, $param);
+    }
+  }
+  if (count($newParams) != 0) {
+    $queryString_listbilling = "&" . htmlentities(implode("&", $newParams));
+  }
+}
+$queryString_listbilling = sprintf("&totalRows_listbilling=%d%s", $totalRows_listbilling, $queryString_listbilling);
+?>
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>จัดการใบตั้งเบิก</title>
+<link rel= "stylesheet" href="../../bootstrap/css/bootstrap.css">
+<script src="https://unpkg.com/ionicons@4.5.9-1/dist/ionicons.js"></script>
+<script type="text/javascript">
+function MM_openBrWindow(theURL,winName,features) { //v2.0
+  window.open(theURL,winName,features);
+}
+</script>
+</head>
+
+<body>
+  <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+    <td align="center" bgcolor="#FFFFCC"><table width="60%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+          <td colspan="4" align="center" bgcolor="#FF6600"><span class="h4">จัดการเอกสารใบเสร็จรับเงิน</span></td>
+        </tr>
+        <tr>
+          <td align="center" bgcolor="#FFFF99"><span class="small">หมายเลขใบแจ้งหนี้</span></td>
+          <td align="center" bgcolor="#FFFF99" class="small">&nbsp;</td>
+          <td align="center" bgcolor="#FFFF99"><span class="small">วันที่สั่งซื้อ</span></td>
+          <td align="center" bgcolor="#FFFF99"><span class="small">พิมพ์ใบเสร็จรับเงิน</span></td>
+        </tr>
+        <?php do { ?>
+          <tr class="small">
+            <td><?php echo $row_listbilling['billing_id']; ?></td>
+            <td>&nbsp;</td>
+            <td><?php echo $row_listbilling['transaction_date']; ?></td>
+            <td align="center"><a target="new" href="module/pdf/printreceipt.php?id=<?php echo $row_listbilling['id']; ?>">พิมพ์</a></td>
+          </tr>
+          <?php } while ($row_listbilling = mysql_fetch_assoc($listbilling)); ?>
+        <tr>
+          <td colspan="4" align="center" valign="middle" class="small"><br>
+            <table width="70%" border="0" cellspacing="0" cellpadding="0">
+            <tr class="small">
+              <td width="10%" align="center"><a href="<?php printf("%s?pageNum_listbilling=%d%s", $currentPage, 0, $queryString_listbilling); ?>">แรกสุด</a></td>
+              <td width="10%" align="center">&nbsp;</td>
+              <td width="10%" align="center"><a href="<?php printf("%s?pageNum_listbilling=%d%s", $currentPage, max(0, $pageNum_listbilling - 1), $queryString_listbilling); ?>">ที่แล้ว</a></td>
+              <td width="10%" align="center">&nbsp;</td>
+              <td width="10%" align="center"><a href="<?php printf("%s?pageNum_listbilling=%d%s", $currentPage, min($totalPages_listbilling, $pageNum_listbilling + 1), $queryString_listbilling); ?>">ต่อไป</a></td>
+              <td width="10%" align="center">&nbsp;</td>
+              <td width="10%" align="center"><a href="<?php printf("%s?pageNum_listbilling=%d%s", $currentPage, $totalPages_listbilling, $queryString_listbilling); ?>">สุดท้าย</a></td>
+            </tr>
+          </table></td>
+        </tr>
+      </table>
+    </body>
+</html>
+<?php
+mysql_free_result($listbilling);
+
+//  onclick= "return confirm('ต้องการลบข้อมูล ออกจากระบบจริงหรือไม่')"
+?>

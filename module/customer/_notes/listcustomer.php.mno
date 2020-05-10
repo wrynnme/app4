@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<info>
+	<infoitem key="UD_list_customer" value="name:id;datatype:int,name:name;datatype:blob,name:address1;datatype:blob,name:address2;datatype:blob,name:address3;datatype:blob,name:address4;datatype:blob,name:address5;datatype:blob,name:postcode;datatype:blob,name:telephone;datatype:blob,name:faxnumber;datatype:blob,name:tax_customer_id;datatype:blob" />
+</info>
