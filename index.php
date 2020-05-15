@@ -90,7 +90,6 @@ $userstatus = $row_searchmember['status'];
 <html lang="en">
 
 <head>
-
 	<?php require_once './head.php'; ?>
 </head>
 
