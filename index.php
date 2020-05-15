@@ -2,87 +2,81 @@
 <?php
 //initialize the session
 if (!isset($_SESSION)) {
-  session_start();
+	session_start();
 }
 //
 
-if ($_GET["pagename"] <> "")
-	{
-		$pagename = $_GET["pagename"];
-	}
-	else
-	{
-		$pagename = 0;	
-	}
-if ($_GET["id"] = null)
-	{
-		$id = $_GET["id"];
-	}
-	else
-	{
-		$id = 0;
-	}
-
-// ** Logout the current user. **
-$logoutAction = $_SERVER['PHP_SELF']."?doLogout=true";
-if ((isset($_SERVER['QUERY_STRING'])) && ($_SERVER['QUERY_STRING'] != "")){
-  $logoutAction .="&". htmlentities($_SERVER['QUERY_STRING']);
+if ($_GET["pagename"] <> "") {
+	$pagename = $_GET["pagename"];
+} else {
+	$pagename = 0;
+}
+if ($_GET["id"] = null) {
+	$id = $_GET["id"];
+} else {
+	$id = 0;
 }
 
-if ((isset($_GET['doLogout'])) &&($_GET['doLogout']=="true")){
-  //to fully log out a visitor we need to clear the session varialbles
-  $_SESSION['MM_Username'] = NULL;
-  $_SESSION['MM_UserGroup'] = NULL;
-  $_SESSION['PrevUrl'] = NULL;
+// ** Logout the current user. **
+$logoutAction = $_SERVER['PHP_SELF'] . "?doLogout=true";
+if ((isset($_SERVER['QUERY_STRING'])) && ($_SERVER['QUERY_STRING'] != "")) {
+	$logoutAction .= "&" . htmlentities($_SERVER['QUERY_STRING']);
+}
 
-  
-  unset($_SESSION['MM_Username']);
-  unset($_SESSION['MM_UserGroup']);
-  unset($_SESSION['PrevUrl']);
+if ((isset($_GET['doLogout'])) && ($_GET['doLogout'] == "true")) {
+	//to fully log out a visitor we need to clear the session varialbles
+	$_SESSION['MM_Username'] = NULL;
+	$_SESSION['MM_UserGroup'] = NULL;
+	$_SESSION['PrevUrl'] = NULL;
 
-  	
-  $logoutGoTo = "login/index.php";
-  if ($logoutGoTo) {
-    header("Location: $logoutGoTo");
-    exit;
-  }
+
+	unset($_SESSION['MM_Username']);
+	unset($_SESSION['MM_UserGroup']);
+	unset($_SESSION['PrevUrl']);
+
+
+	$logoutGoTo = "login/index.php";
+	if ($logoutGoTo) {
+		header("Location: $logoutGoTo");
+		exit;
+	}
 }
 ?>
 <?php
 if (!function_exists("GetSQLValueString")) {
-function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
-{
-  if (PHP_VERSION < 6) {
-    $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
-  }
+	function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "")
+	{
+		if (PHP_VERSION < 6) {
+			$theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
+		}
 
-  $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
+		$theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
 
-  switch ($theType) {
-    case "text":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;    
-    case "long":
-    case "int":
-      $theValue = ($theValue != "") ? intval($theValue) : "NULL";
-      break;
-    case "double":
-      $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
-      break;
-    case "date":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;
-    case "defined":
-      $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
-      break;
-  }
-  return $theValue;
-}
+		switch ($theType) {
+			case "text":
+				$theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+				break;
+			case "long":
+			case "int":
+				$theValue = ($theValue != "") ? intval($theValue) : "NULL";
+				break;
+			case "double":
+				$theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
+				break;
+			case "date":
+				$theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+				break;
+			case "defined":
+				$theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
+				break;
+		}
+		return $theValue;
+	}
 }
 
 $colname_searchmember = "-1";
 if (isset($_SESSION['MM_Username'])) {
-  $colname_searchmember = $_SESSION['MM_Username'];
+	$colname_searchmember = $_SESSION['MM_Username'];
 }
 mysql_select_db($database_ml, $ml);
 $query_searchmember = sprintf("SELECT * FROM member WHERE username LIKE %s", GetSQLValueString($colname_searchmember, "text"));
@@ -94,118 +88,106 @@ $userstatus = $row_searchmember['status'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
-
-  <title>THE Logistics Dashboard</title>
-
-  <!-- Custom fonts for this template-->
-  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-
-  <!-- Custom styles for this template-->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-    <link href="css/sb-admin-2.min.css" rel="stylesheet">
-  	
-
+	<?php require_once './head.php'; ?>
 </head>
+
 <body id="page-top">
 
-  <!-- Page Wrapper -->
-  <div id="wrapper">
+	<!-- Page Wrapper -->
+	<div id="wrapper">
 
-    <!-- Sidebar -->
-    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+		<!-- Sidebar -->
+		<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
-      <!-- Sidebar - Brand -->
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php?pagename=0">
-        <div class="sidebar-brand-icon rotate-n-15">
-          <i class="fas fa-laugh-wink"></i>
-        </div>
-        <?
-			switch($userstatus)
-			{
-				case 0 : $statustype = "ผู้ดูแลระบบ"; break;
-				case 1 : $statustype = "เจ้าหน้าที่บัญชี"; break;
-				case 2 : $statustype = "เจ้าหน้าที่คีย์ข้อมูล"; break;													
-			}
-		?>
-        <div class="sidebar-brand-text mx-3">สวัสดีคุณ<br><?php echo $row_searchmember['firstname']; ?></div>       
-      </a>
+			<!-- Sidebar - Brand -->
+			<a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php?pagename=0">
+				<div class="sidebar-brand-icon rotate-n-15">
+					<i class="fas fa-laugh-wink"></i>
+				</div>
+				<?
+				switch ($userstatus) {
+					case 0:
+						$statustype = "ผู้ดูแลระบบ";
+						break;
+					case 1:
+						$statustype = "เจ้าหน้าที่บัญชี";
+						break;
+					case 2:
+						$statustype = "เจ้าหน้าที่คีย์ข้อมูล";
+						break;
+				}
+				?>
+				<div class="sidebar-brand-text mx-3">สวัสดีคุณ<br><?php echo $row_searchmember['firstname']; ?></div>
+			</a>
 
-      <!-- Divider -->
-      <hr class="sidebar-divider my-0">
+			<!-- Divider -->
+			<hr class="sidebar-divider my-0">
 
-      <!-- Nav Item - Dashboard -->
-      <li class="nav-item active">
-        <a class="nav-link" href="index.php?pagename=0">
-          <i class="fas fa-fw fa-tachometer-alt"></i>
-          <span>Dashboard</span></a>
-      </li>
+			<!-- Nav Item - Dashboard -->
+			<li class="nav-item active">
+				<a class="nav-link" href="index.php?pagename=0">
+					<i class="fas fa-fw fa-tachometer-alt"></i>
+					<span>Dashboard</span></a>
+			</li>
 
-      <!-- Divider -->
-      <hr class="sidebar-divider">
+			<!-- Divider -->
+			<hr class="sidebar-divider">
 
-      <!-- Heading -->
-      <div class="sidebar-heading">
-        จัดการข้อมูล
-      </div>
+			<!-- Heading -->
+			<div class="sidebar-heading">
+				จัดการข้อมูล
+			</div>
 
-      <!-- Nav Item - Pages Collapse Menu --> 
-       <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-          <i class="fas fa-fw fa-cog"></i>
-          <span>ระบบงานจัดส่งสินค้า</span>
-        </a>
-        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-        <?php 
-		  if ($userstatus == 0 or $userstatus==2 or $userstatus==1)
-		  {
-			  echo "				
+			<!-- Nav Item - Pages Collapse Menu -->
+			<li class="nav-item">
+				<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+					<i class="fas fa-fw fa-cog"></i>
+					<span>ระบบงานจัดส่งสินค้า</span>
+				</a>
+				<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+					<?php
+					if ($userstatus == 0 or $userstatus == 2 or $userstatus == 1) {
+						echo "				
 				  <div class='bg-white py-2 collapse-inner rounded'>
 					<h6 class='collapse-header'>จัดส่งสินค้า</h6>
 					<a class='collapse-item' href='index.php?pagename=listshipment'>ใบส่งสินค้า</a>
 					<a class='collapse-item' href='index.php?pagename=listshipment-select'>พิมพ์ใบส่งสินค้า</a>                      
 				  </div>";
-		  }
-		  ?>
-		  
-          <?php 
-		  if ($userstatus == 0 or $userstatus==1)
-		  {
-			  echo "
+					}
+					?>
+
+					<?php
+					if ($userstatus == 0 or $userstatus == 1) {
+						echo "
 			  <div class='bg-white py-2 collapse-inner rounded'>
 				<h6 class='collapse-header'>เรียกเก็บเงิน</h6>
 				<a class='collapse-item' href='index.php?pagename=listbilling'>พิมพ์ใบตั้งเบิก</a>            
 				<a class='collapse-item' href='index.php?pagename=listbilling-select'>พิมพ์ใบตั้งเบิกรวม</a> 
 				<a class='collapse-item' href='index.php?pagename=receipt'>พิมพ์ใบเสร็จรับเงิน</a>
 			  </div>";
-		  }
-          ?>
-          
-		  <?php
-		   if ($userstatus == 0 or $userstatus==2)
-		  {
-			  echo "	
+					}
+					?>
+
+					<?php
+					if ($userstatus == 0 or $userstatus == 2) {
+						echo "	
 			  <div class='bg-white py-2 collapse-inner rounded'>
 				<h6 class='collapse-header'>ค่าแรงคนขับรถ</h6>
 				<a class='collapse-item' href='index.php?pagename=listbilloil'>บันทึกการใช้น้ำมันรถ</a>
 				<a class='collapse-item' href='index.php?pagename=slipmember-select'>สลิปค่าจ้างคนขับรถ</a>
 			  </div>";
-		  }
-          ?>
-          
-        </div>
-      </li>
- 
+					}
+					?>
 
- 
- <!--     <li class="nav-item">
+				</div>
+			</li>
+
+
+
+			<!--     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
           <i class="fas fa-fw fa-cog"></i>
           <span>ระบบงานจัดส่งสินค้า</span>
@@ -230,17 +212,17 @@ $userstatus = $row_searchmember['status'];
         </div>
       </li>
  -->
-      <!-- Nav Item - Utilities Collapse Menu -->
-     
-     <li class='nav-item'>
-        <a class='nav-link collapsed' href='#' data-toggle='collapse' data-target='#collapseThree' aria-expanded='true' aria-controls='collapseThree'>
-          <i class='fas fa-fw fa-wrench'></i>
-          <span>ยกเลิกเอกสาร</span>
-        </a>
-  <?php
-	if ($userstatus ==0) //เมนูสำหรับ ยกเลิกเอกสาร
-	{ 
-	echo "
+			<!-- Nav Item - Utilities Collapse Menu -->
+
+			<li class='nav-item'>
+				<a class='nav-link collapsed' href='#' data-toggle='collapse' data-target='#collapseThree' aria-expanded='true' aria-controls='collapseThree'>
+					<i class='fas fa-fw fa-wrench'></i>
+					<span>ยกเลิกเอกสาร</span>
+				</a>
+				<?php
+				if ($userstatus == 0) //เมนูสำหรับ ยกเลิกเอกสาร
+				{
+					echo "
         <div id='collapseThree' class='collapse' aria-labelledby='headingUtilities' data-parent='#accordionSidebar'>
           <div class='bg-white py-2 collapse-inner rounded'>
             <h6 class='collapse-header'>ยกเลิกเอกสาร</h6>
@@ -251,20 +233,20 @@ $userstatus = $row_searchmember['status'];
 			<a class='collapse-item' href='index.php?pagename=reset_bill_oil'>ยกเลิกใบบันทึกน้ำมัน</a>
             <a class='collapse-item' href='index.php?pagename=reset_bill_member'>ยกเลิกใบเสร็จคนขับรถ</a>
           </div>         
-       </div>";  
-	}  
-	 ?>
-    </li>   
-<!--//// เมนูสำหรับรายงานผลข้อมูลต่างๆ //// -->  
-     <li class='nav-item'>
-        <a class='nav-link collapsed' href='#' data-toggle='collapse' data-target='#collapsefour' aria-expanded='true' aria-controls='collapseThree'>
-          <i class='fas fa-fw fa-wrench'></i>
-          <span>รายงานและดาวน์โหลด</span>
-        </a>
-  <?php
-	if ($userstatus ==0) //เมนูสำหรับ ยกเลิกเอกสาร
-	{ 
-	echo "
+       </div>";
+				}
+				?>
+			</li>
+			<!--//// เมนูสำหรับรายงานผลข้อมูลต่างๆ //// -->
+			<li class='nav-item'>
+				<a class='nav-link collapsed' href='#' data-toggle='collapse' data-target='#collapsefour' aria-expanded='true' aria-controls='collapseThree'>
+					<i class='fas fa-fw fa-wrench'></i>
+					<span>รายงานและดาวน์โหลด</span>
+				</a>
+				<?php
+				if ($userstatus == 0) //เมนูสำหรับ ยกเลิกเอกสาร
+				{
+					echo "
         <div id='collapsefour' class='collapse' aria-labelledby='headingUtilities' data-parent='#accordionSidebar'>
           <div class='bg-white py-2 collapse-inner rounded'>
             <h6 class='collapse-header'>รายงานและดาวน์โหลดข้อมูล</h6>
@@ -277,16 +259,15 @@ $userstatus = $row_searchmember['status'];
             <a class='collapse-item' href='module/report/report7.php' target='report'>ข้อมูลลูกค้า</a>
             <a class='collapse-item' href='module/report/report8.php' target='report'>ข้อมูลคนขับรถ</a>			
           </div>         
-       </div>"; 
-
-	}  
-	 ?>
-    </li>  
-<!--//// จบเมนูสำหรับรายงานผลข้อมูลต่างๆ //// -->       
-     <?php
-	if ($userstatus ==0) //เมนูสำหรับ Admin เพื่อจัดการระบบ
-	{ 
-	echo "
+       </div>";
+				}
+				?>
+			</li>
+			<!--//// จบเมนูสำหรับรายงานผลข้อมูลต่างๆ //// -->
+			<?php
+			if ($userstatus == 0) //เมนูสำหรับ Admin เพื่อจัดการระบบ
+			{
+				echo "
      <li class='nav-item'>
         <a class='nav-link collapsed' href='#' data-toggle='collapse' data-target='#collapseUtilities' aria-expanded='true' aria-controls='collapseUtilities'>
           <i class='fas fa-fw fa-wrench'></i>
@@ -307,9 +288,9 @@ $userstatus = $row_searchmember['status'];
           </div>
         </div>
       </li>";
-	}
-	 ?>
-<!--      <li class="nav-item">
+			}
+			?>
+			<!--      <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
           <i class="fas fa-fw fa-wrench"></i>
           <span>จัดการระบบ</span>
@@ -330,63 +311,54 @@ $userstatus = $row_searchmember['status'];
         </div>
       </li> -->
 
-      <li class="nav-item active">
-        <a class="nav-link" href="<?php echo $logoutAction ?>">     
-		<i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-        <span>ออกจากระบบ</span> </a> 
-      </li>
+			<li class="nav-item active">
+				<a class="nav-link" href="<?php echo $logoutAction ?>">
+					<i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+					<span>ออกจากระบบ</span> </a>
+			</li>
 
-      <!-- Divider -->
-      <hr class="sidebar-divider">
-     
-      <!-- Sidebar Toggler (Sidebar) -->
-      <div class="text-center d-none d-md-inline">
-        <button class="rounded-circle border-0" id="sidebarToggle"></button>
-      </div>
+			<!-- Divider -->
+			<hr class="sidebar-divider">
 
-    </ul>
-    <!-- End of Sidebar -->
+			<!-- Sidebar Toggler (Sidebar) -->
+			<div class="text-center d-none d-md-inline">
+				<button class="rounded-circle border-0" id="sidebarToggle"></button>
+			</div>
 
-    <!-- Content Wrapper -->
-    <div id="content-wrapper" class="d-flex flex-column">
+		</ul>
+		<!-- End of Sidebar -->
 
-      <!-- Main Content -->
-      <div id="content">
+		<!-- Content Wrapper -->
+		<div id="content-wrapper" class="d-flex flex-column">
 
-        <!-- Topbar -->
-        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
-          <!-- Sidebar Toggle (Topbar) -->
-          <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-            <i class="fa fa-bars"></i>
-          </button>         
-        </nav>
-        <!-- End of Topbar -->
-
-        <!-- Begin Page Content -->
-        <div class="container-fluid">
-
-          <!-- Page Heading -->
-          <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-          </div>
-
-          <!-- Content Row -->
-          <div class="row">
+			<!-- Main Content -->
+			<div id="content">
 
 
-<!--///////// การ์ดแสดงข้อมูลของ เจ้าหน้าที่บัญชี /////////////////////// -->
-            <!-- Earnings (Monthly) Card Example -->
-            <?php 
-			if ($userstatus ==1) //แสดงการ์ดข้อมูลูสำหรับ เจ้าหน้าที่บัญชี
-			{
-			//<!-- Card ข้อมูลแสดงจำนวนเอกสารใบเสร็จรับเงินที่รอพิมพ์ --> 
-			mysql_select_db($database_ml, $ml);
-			$sql = "SELECT * FROM shipment WHERE status=2";
-			$query_sql = mysql_query($sql, $ml) or die(mysql_error());
-			$row_query_sql = mysql_fetch_assoc($query_sql);
-			$totalRows_query_sql = mysql_num_rows($query_sql);
-			echo "
+				<!-- Begin Page Content -->
+				<div class="container-fluid">
+
+					<!-- Page Heading -->
+					<div class="d-sm-flex align-items-center justify-content-between mb-4">
+						<h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+					</div>
+
+					<!-- Content Row -->
+					<div class="row">
+
+
+						<!--///////// การ์ดแสดงข้อมูลของ เจ้าหน้าที่บัญชี /////////////////////// -->
+						<!-- Earnings (Monthly) Card Example -->
+						<?php
+						if ($userstatus == 1) //แสดงการ์ดข้อมูลูสำหรับ เจ้าหน้าที่บัญชี
+						{
+							//<!-- Card ข้อมูลแสดงจำนวนเอกสารใบเสร็จรับเงินที่รอพิมพ์ --> 
+							mysql_select_db($database_ml, $ml);
+							$sql = "SELECT * FROM shipment WHERE status=2";
+							$query_sql = mysql_query($sql, $ml) or die(mysql_error());
+							$row_query_sql = mysql_fetch_assoc($query_sql);
+							$totalRows_query_sql = mysql_num_rows($query_sql);
+							echo "
 				<div class='col-xl-6 col-md-6 mb-4'>
 				  <div class='card border-left-primary shadow h-100 py-2'>
 					<div class='card-body'>
@@ -403,14 +375,14 @@ $userstatus = $row_searchmember['status'];
 					</div>
 				  </div>
 				</div>";
-				
-			//<!-- Card ข้อมูลแสดงจำนวนเอกสารใบแจ้งหนี้ที่รอพิมพ์ -->
-			mysql_select_db($database_ml, $ml);
-			$sql = "SELECT * FROM shipment WHERE status=1";
-			$query_sql = mysql_query($sql, $ml) or die(mysql_error());
-			$row_query_sql = mysql_fetch_assoc($query_sql);
-			$totalRows_query_sql = mysql_num_rows($query_sql);
-			echo "
+
+							//<!-- Card ข้อมูลแสดงจำนวนเอกสารใบแจ้งหนี้ที่รอพิมพ์ -->
+							mysql_select_db($database_ml, $ml);
+							$sql = "SELECT * FROM shipment WHERE status=1";
+							$query_sql = mysql_query($sql, $ml) or die(mysql_error());
+							$row_query_sql = mysql_fetch_assoc($query_sql);
+							$totalRows_query_sql = mysql_num_rows($query_sql);
+							echo "
 				<div class='col-xl-6 col-md-6 mb-4'>
 				  <div class='card border-left-primary shadow h-100 py-2'>
 					<div class='card-body'>
@@ -427,29 +399,29 @@ $userstatus = $row_searchmember['status'];
 					</div>
 				  </div>
 				</div>";
-			}
-			?>
-            
-             
-<!--///////// การ์ดแสดงข้อมูลของ เจ้าหน้าที่คีย์ข้อมูล /////////////////////// -->
-             <!-- Earnings (Monthly) Card Example -->
-            <?php 
-			if ($userstatus ==2) //แสดงการ์ดข้อมูลูสำหรับ เจ้าหน้าที่คีย์ระบบ
-			{
-			//<!-- Card ข้อมูลแสดงจำนวนคนขับรถของบริษัท --> 
-			mysql_select_db($database_ml, $ml);
-			$sql = "SELECT * FROM drivermember";
-			$query_sql = mysql_query($sql, $ml) or die(mysql_error());
-			$row_query_sql = mysql_fetch_assoc($query_sql);
-			$totalRows_query_sql = mysql_num_rows($query_sql);
-			echo "
+						}
+						?>
+
+
+						<!--///////// การ์ดแสดงข้อมูลของ เจ้าหน้าที่คีย์ข้อมูล /////////////////////// -->
+						<!-- Earnings (Monthly) Card Example -->
+						<?php
+						if ($userstatus == 2) //แสดงการ์ดข้อมูลูสำหรับ เจ้าหน้าที่คีย์ระบบ
+						{
+							//<!-- Card ข้อมูลแสดงจำนวนคนขับรถของบริษัท --> 
+							mysql_select_db($database_ml, $ml);
+							$sql = "SELECT * FROM drivermember";
+							$query_sql = mysql_query($sql, $ml) or die(mysql_error());
+							$row_query_sql = mysql_fetch_assoc($query_sql);
+							$totalRows_query_sql = mysql_num_rows($query_sql);
+							echo "
 				<div class='col-xl-3 col-md-6 mb-4'>
 				  <div class='card border-left-primary shadow h-100 py-2'>
 					<div class='card-body'>
 					  <div class='row no-gutters align-items-center'>
 						<div class='col mr-2'>
 						  <div class='text-xl font-weight-bold text-primary text-uppercase mb-1'>จำนวนคนขับรถของบริษัท</div>
-						  <div class='h6 mb-0 font-weight-bold text-gray-800'>".($totalRows_query_sql-1)."  คน</div>
+						  <div class='h6 mb-0 font-weight-bold text-gray-800'>" . ($totalRows_query_sql - 1) . "  คน</div>
 						  <div class='text-xl font-weight-bold text-primary text-uppercase mb-1'></div>
 						</div>
 						<div class='col-auto'>
@@ -459,15 +431,15 @@ $userstatus = $row_searchmember['status'];
 					</div>
 				  </div>
 				</div>";
-				
-				
-			//<!-- Card ข้อมูลแสดงจำนวนบริษัทลูกค้า --> 
-			mysql_select_db($database_ml, $ml);
-			$sql = "SELECT * FROM customer";
-			$query_sql = mysql_query($sql, $ml) or die(mysql_error());
-			$row_query_sql = mysql_fetch_assoc($query_sql);
-			$totalRows_query_sql = mysql_num_rows($query_sql);
-			echo "
+
+
+							//<!-- Card ข้อมูลแสดงจำนวนบริษัทลูกค้า --> 
+							mysql_select_db($database_ml, $ml);
+							$sql = "SELECT * FROM customer";
+							$query_sql = mysql_query($sql, $ml) or die(mysql_error());
+							$row_query_sql = mysql_fetch_assoc($query_sql);
+							$totalRows_query_sql = mysql_num_rows($query_sql);
+							echo "
 				<div class='col-xl-3 col-md-6 mb-4'>
 				  <div class='card border-left-primary shadow h-100 py-2'>
 					<div class='card-body'>
@@ -484,15 +456,15 @@ $userstatus = $row_searchmember['status'];
 					</div>
 				  </div>
 				</div>";
-				
-				
-			//<!-- Card ข้อมูลแสดงจำนวนเอกสารใบจ่ายงานคนขับรถรอพิมพ์ -->
-			mysql_select_db($database_ml, $ml);
-			$sql = "SELECT * FROM shipment WHERE car_id LIKE '-'";
-			$query_sql = mysql_query($sql, $ml) or die(mysql_error());
-			$row_query_sql = mysql_fetch_assoc($query_sql);
-			$totalRows_query_sql = mysql_num_rows($query_sql);
-			echo "
+
+
+							//<!-- Card ข้อมูลแสดงจำนวนเอกสารใบจ่ายงานคนขับรถรอพิมพ์ -->
+							mysql_select_db($database_ml, $ml);
+							$sql = "SELECT * FROM shipment WHERE car_id LIKE '-'";
+							$query_sql = mysql_query($sql, $ml) or die(mysql_error());
+							$row_query_sql = mysql_fetch_assoc($query_sql);
+							$totalRows_query_sql = mysql_num_rows($query_sql);
+							echo "
 				<div class='col-xl-3 col-md-6 mb-4'>
 				  <div class='card border-left-primary shadow h-100 py-2'>
 					<div class='card-body'>
@@ -509,8 +481,125 @@ $userstatus = $row_searchmember['status'];
 					</div>
 				  </div>
 				</div>";
-				
-				
+
+
+							//<!-- Card ข้อมูลแสดงจำนวนรายการรวมยอดที่บันทึกประจำวัน -->  transaction_date
+							mysql_select_db($database_ml, $ml);
+							$sql = "SELECT * FROM shipment WHERE status=0 AND transaction_date LIKE '" . date("Y-m-d") . "'";
+							$query_sql = mysql_query($sql, $ml) or die(mysql_error());
+							$row_query_sql = mysql_fetch_assoc($query_sql);
+							$totalRows_query_sql = mysql_num_rows($query_sql);
+							echo "
+				<div class='col-xl-3 col-md-6 mb-4'>
+				  <div class='card border-left-primary shadow h-100 py-2'>
+					<div class='card-body'>
+					  <div class='row no-gutters align-items-center'>
+						<div class='col mr-2'>
+						  <div class='text-xl font-weight-bold text-primary text-uppercase mb-1'>จำนวนเอกสารที่เปิดประจำวันที่ " . date('d-m-Y') . " </div>
+						  <div class='h6 mb-0 font-weight-bold text-gray-800'>$totalRows_query_sql รายการ</div>
+						  <div class='text-xl font-weight-bold text-primary text-uppercase mb-1'><a href='index.php?pagename=0&status=100'>ดูข้อมูล</a></div>
+						</div>
+						<div class='col-auto'>
+						  <i class='fas fa-calendar fa-2x text-gray-300'></i>
+						</div>
+					  </div>
+					</div>
+				  </div>
+				</div>";
+						}
+						?>
+
+
+						<!--///////// การ์ดแสดงข้อมูลของ ผู้ดูแลระบบ /////////////////////// -->
+						<!-- Earnings (Monthly) Card Example -->
+						<?php
+						if ($userstatus == 0) //แสดงการ์ดข้อมูลูสำหรับ ผู้ดูแลระบบ
+						{
+							//<!-- Card ข้อมูลแสดงจำนวนรอบการวิ่งรถส่งของในเดือนปัจจุบัน --> 
+							mysql_select_db($database_ml, $ml);
+							$sql = "SELECT picturestatus2 FROM shipment WHERE transaction_date LIKE '%" . date("Y-m") . "%' and status != 9";
+							$query_sql = mysql_query($sql, $ml) or die(mysql_error());
+							$row_query_sql = mysql_fetch_assoc($query_sql);
+							$totalRows_query_sql = mysql_num_rows($query_sql);
+							echo "
+				<div class='col-xl-3 col-md-6 mb-4'>
+				  <div class='card border-left-primary shadow h-100 py-2'>
+					<div class='card-body'>
+					  <div class='row no-gutters align-items-center'>
+						<div class='col mr-2'>
+						  <div class='text-xl font-weight-bold text-primary text-uppercase mb-1'>จำนวนรอบการส่งสินค้า ประจำเดือน<br>" . date("M/Y") . "</div>
+						  <div class='h6 mb-0 font-weight-bold text-gray-800'>" . $totalRows_query_sql . " </div>
+						  <div class='text-xl font-weight-bold text-primary text-uppercase mb-1'></div>
+						</div>
+						<div class='col-auto'>
+						  <i class='fas fa-calendar fa-2x text-gray-300'></i>
+						</div>
+					  </div>
+					</div>
+				  </div>
+				</div>";
+
+
+							//<!-- Card ข้อมูลแสดงยอดรายได้ประจำเดือน --> 
+							mysql_select_db($database_ml, $ml);
+							$sql = "SELECT total FROM receipt WHERE transaction_date LIKE '%" . date("Y-m") . "%'";
+							$query_sql = mysql_query($sql, $ml) or die(mysql_error());
+							$row_query_sql = mysql_fetch_assoc($query_sql);
+							$totalRows_query_sql = mysql_num_rows($query_sql);
+							$totalall = 0;
+							do {
+								$totalall = $totalall + $row_query_sql['total'];
+							} while ($row_query_sql = mysql_fetch_assoc($query_sql));
+
+							echo "
+				<div class='col-xl-3 col-md-6 mb-4'>
+				  <div class='card border-left-primary shadow h-100 py-2'>
+					<div class='card-body'>
+					  <div class='row no-gutters align-items-center'>
+						<div class='col mr-2'>
+						  <div class='text-xl font-weight-bold text-primary text-uppercase mb-1'>รายได้ประจำเดือน<br>" . date("M-Y") . " </div>
+						  <div class='h6 mb-0 font-weight-bold text-gray-800'>" . number_format($totalall, 2) . "</div>
+						  <div class='text-xl font-weight-bold text-primary text-uppercase mb-1'></div>
+						</div>
+						<div class='col-auto'>
+						  <i class='fas fa-calendar fa-2x text-gray-300'></i>
+						</div>
+					  </div>
+					</div>
+				  </div>
+				</div>";
+
+
+							//<!-- Card ข้อมูลแสดงจำนวนค่าจ้างที่จ่ายให้คนขับรถ -->
+							mysql_select_db($database_ml, $ml);
+							$sql = "SELECT receipt_member_amout FROM receipt_member WHERE date_payment_member LIKE '%" . date("Y-m") . "%'";
+							$query_sql = mysql_query($sql, $ml) or die(mysql_error());
+							$row_query_sql = mysql_fetch_assoc($query_sql);
+							$totalRows_query_sql = mysql_num_rows($query_sql);
+							$totalall_member = 0;
+							do {
+								$totalall_member = $totalall_member + $row_query_sql['receipt_member_amout'];
+							} while ($row_query_sql = mysql_fetch_assoc($query_sql));
+
+							echo "
+				<div class='col-xl-3 col-md-6 mb-4'>
+				  <div class='card border-left-primary shadow h-100 py-2'>
+					<div class='card-body'>
+					  <div class='row no-gutters align-items-center'>
+						<div class='col mr-2'>
+						  <div class='text-xl font-weight-bold text-primary text-uppercase mb-1'>ค่าจ้างคนขับรถที่จ่ายออกประจำเดือน<br>" . date("M-Y") . " </div>
+						  <div class='h6 mb-0 font-weight-bold text-gray-800'>" . number_format($totalall_member, 2) . "</div>
+						  <div class='text-xl font-weight-bold text-primary text-uppercase mb-1'></div>
+						</div>
+						<div class='col-auto'>
+						  <i class='fas fa-calendar fa-2x text-gray-300'></i>
+						</div>
+					  </div>
+					</div>
+				  </div>
+				</div>";
+
+							/*				
 			//<!-- Card ข้อมูลแสดงจำนวนรายการรวมยอดที่บันทึกประจำวัน -->  transaction_date
 			mysql_select_db($database_ml, $ml);
 			$sql = "SELECT * FROM shipment WHERE status=0 AND transaction_date LIKE '".date("Y-m-d")."'";
@@ -533,132 +622,15 @@ $userstatus = $row_searchmember['status'];
 					  </div>
 					</div>
 				  </div>
-				</div>";										
-			}
-			?>
-             
-             
-<!--///////// การ์ดแสดงข้อมูลของ ผู้ดูแลระบบ /////////////////////// -->
-             <!-- Earnings (Monthly) Card Example -->
-            <?php 
-			if ($userstatus ==0) //แสดงการ์ดข้อมูลูสำหรับ ผู้ดูแลระบบ
-			{
-			//<!-- Card ข้อมูลแสดงจำนวนรอบการวิ่งรถส่งของในเดือนปัจจุบัน --> 
-			mysql_select_db($database_ml, $ml);
-			$sql = "SELECT picturestatus2 FROM shipment WHERE transaction_date LIKE '%".date("Y-m")."%' and status != 9";
-			$query_sql = mysql_query($sql, $ml) or die(mysql_error());
-			$row_query_sql = mysql_fetch_assoc($query_sql);
-			$totalRows_query_sql = mysql_num_rows($query_sql);
-			echo "
-				<div class='col-xl-3 col-md-6 mb-4'>
-				  <div class='card border-left-primary shadow h-100 py-2'>
-					<div class='card-body'>
-					  <div class='row no-gutters align-items-center'>
-						<div class='col mr-2'>
-						  <div class='text-xl font-weight-bold text-primary text-uppercase mb-1'>จำนวนรอบการส่งสินค้า ประจำเดือน<br>".date("M/Y") ."</div>
-						  <div class='h6 mb-0 font-weight-bold text-gray-800'>".$totalRows_query_sql." </div>
-						  <div class='text-xl font-weight-bold text-primary text-uppercase mb-1'></div>
-						</div>
-						<div class='col-auto'>
-						  <i class='fas fa-calendar fa-2x text-gray-300'></i>
-						</div>
-					  </div>
-					</div>
-				  </div>
 				</div>";
-				
-				
-			//<!-- Card ข้อมูลแสดงยอดรายได้ประจำเดือน --> 
-			mysql_select_db($database_ml, $ml);
-			$sql = "SELECT total FROM receipt WHERE transaction_date LIKE '%".date("Y-m")."%'";
-			$query_sql = mysql_query($sql, $ml) or die(mysql_error());
-			$row_query_sql = mysql_fetch_assoc($query_sql);
-			$totalRows_query_sql = mysql_num_rows($query_sql);
-			$totalall = 0;			
-			do { 
-				$totalall = $totalall + $row_query_sql['total'];			
-			} while ($row_query_sql = mysql_fetch_assoc($query_sql));
-			
-			echo "
-				<div class='col-xl-3 col-md-6 mb-4'>
-				  <div class='card border-left-primary shadow h-100 py-2'>
-					<div class='card-body'>
-					  <div class='row no-gutters align-items-center'>
-						<div class='col mr-2'>
-						  <div class='text-xl font-weight-bold text-primary text-uppercase mb-1'>รายได้ประจำเดือน<br>".date("M-Y")." </div>
-						  <div class='h6 mb-0 font-weight-bold text-gray-800'>". number_format($totalall,2)."</div>
-						  <div class='text-xl font-weight-bold text-primary text-uppercase mb-1'></div>
-						</div>
-						<div class='col-auto'>
-						  <i class='fas fa-calendar fa-2x text-gray-300'></i>
-						</div>
-					  </div>
-					</div>
-				  </div>
-				</div>";
-				
-				
-			//<!-- Card ข้อมูลแสดงจำนวนค่าจ้างที่จ่ายให้คนขับรถ -->
-			mysql_select_db($database_ml, $ml);
-			$sql = "SELECT receipt_member_amout FROM receipt_member WHERE date_payment_member LIKE '%".date("Y-m")."%'";
-			$query_sql = mysql_query($sql, $ml) or die(mysql_error());
-			$row_query_sql = mysql_fetch_assoc($query_sql);
-			$totalRows_query_sql = mysql_num_rows($query_sql);
-			$totalall_member = 0;			
-			do { 
-				$totalall_member = $totalall_member + $row_query_sql['receipt_member_amout'];			
-			} while ($row_query_sql = mysql_fetch_assoc($query_sql));
-			
-			echo "
-				<div class='col-xl-3 col-md-6 mb-4'>
-				  <div class='card border-left-primary shadow h-100 py-2'>
-					<div class='card-body'>
-					  <div class='row no-gutters align-items-center'>
-						<div class='col mr-2'>
-						  <div class='text-xl font-weight-bold text-primary text-uppercase mb-1'>ค่าจ้างคนขับรถที่จ่ายออกประจำเดือน<br>".date("M-Y")." </div>
-						  <div class='h6 mb-0 font-weight-bold text-gray-800'>". number_format($totalall_member,2)."</div>
-						  <div class='text-xl font-weight-bold text-primary text-uppercase mb-1'></div>
-						</div>
-						<div class='col-auto'>
-						  <i class='fas fa-calendar fa-2x text-gray-300'></i>
-						</div>
-					  </div>
-					</div>
-				  </div>
-				</div>";
-				
-/*				
-			//<!-- Card ข้อมูลแสดงจำนวนรายการรวมยอดที่บันทึกประจำวัน -->  transaction_date
-			mysql_select_db($database_ml, $ml);
-			$sql = "SELECT * FROM shipment WHERE status=0 AND transaction_date LIKE '".date("Y-m-d")."'";
-			$query_sql = mysql_query($sql, $ml) or die(mysql_error());
-			$row_query_sql = mysql_fetch_assoc($query_sql);
-			$totalRows_query_sql = mysql_num_rows($query_sql);
-			echo "
-				<div class='col-xl-3 col-md-6 mb-4'>
-				  <div class='card border-left-primary shadow h-100 py-2'>
-					<div class='card-body'>
-					  <div class='row no-gutters align-items-center'>
-						<div class='col mr-2'>
-						  <div class='text-xl font-weight-bold text-primary text-uppercase mb-1'>จำนวนเอกสารที่เปิดประจำวันที่ ".date('d-m-Y')." </div>
-						  <div class='h6 mb-0 font-weight-bold text-gray-800'>$totalRows_query_sql รายการ</div>
-						  <div class='text-xl font-weight-bold text-primary text-uppercase mb-1'><a href='index.php?pagename=0&status=100'>ดูข้อมูล</a></div>
-						</div>
-						<div class='col-auto'>
-						  <i class='fas fa-calendar fa-2x text-gray-300'></i>
-						</div>
-					  </div>
-					</div>
-				  </div>
-				</div>";
-*/														
-			}
-			?>
-                          
-             
+*/
+						}
+						?>
 
 
-<!--            <div class="col-xl-3 col-md-6 mb-4">
+
+
+						<!--            <div class="col-xl-3 col-md-6 mb-4">
               <div class="card border-left-primary shadow h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
@@ -674,8 +646,8 @@ $userstatus = $row_searchmember['status'];
               </div>
             </div>
  -->
-            <!-- Earnings (Monthly) Card Example -->
-<!--            <div class="col-xl-3 col-md-6 mb-4">
+						<!-- Earnings (Monthly) Card Example -->
+						<!--            <div class="col-xl-3 col-md-6 mb-4">
               <div class="card border-left-success shadow h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
@@ -691,8 +663,8 @@ $userstatus = $row_searchmember['status'];
               </div>
             </div> -->
 
-            <!-- Earnings (Monthly) Card Example -->
-<!--            <div class="col-xl-3 col-md-6 mb-4">
+						<!-- Earnings (Monthly) Card Example -->
+						<!--            <div class="col-xl-3 col-md-6 mb-4">
               <div class="card border-left-info shadow h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
@@ -717,8 +689,8 @@ $userstatus = $row_searchmember['status'];
               </div>
             </div> -->
 
-            <!-- Pending Requests Card Example -->
-<!--            <div class="col-xl-3 col-md-6 mb-4">
+						<!-- Pending Requests Card Example -->
+						<!--            <div class="col-xl-3 col-md-6 mb-4">
               <div class="card border-left-warning shadow h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
@@ -735,128 +707,128 @@ $userstatus = $row_searchmember['status'];
             </div>
           </div> -->
 
-		<div class="col-xl-12 col-md-6 mb-4">
-        <?php
-			//echo $pagename;
- 			switch ($pagename){
-					case "0":
-							include "module/shipment/listall.php";				
-							break;				
-					case "listshipment":
-							include "module/shipment/listshipment.php";				
-							break;
-					case "listshipment-select":
-							include "module/shipment/listshipment-select.php";				
-							break;
-					case "listshipment-select2":
-							include "module/shipment/listshipment-select2.php";				
-							break;														
-					case "addshipment":
-							include "module/shipment/addshipment.php";				
-							break;
-					case "addshipment2":
-							include "module/shipment/addshipment2.php";				
-							break;
-					case "listbilling":
-							include "module/shipment/listbilling.php";				
-							break;
-					case "listbilling-select":
-							include "module/shipment/listbilling-select.php";				
-							break;
-					case "listbilling-select2":
-							include "module/shipment/listbilling-select2.php";				
-							break;				
-					case "receipt":
-							include "module/shipment/listreceipt.php";				
-							break;
-					case "listcustomer":
-							include "module/customer/listcustomer.php";				
-							break;
-					case "listdrivermember":
-							include "module/drivermember/listdrivermember.php";				
-							break;
-					case "receipt":
-							include "module/shipment/listreceipt.php";				
-							break;
-					case "listreceipt2":
-							include "module/shipment/listreceipt2.php";				
-							break;																													
-					case "listbilloil":
-							include "module/shipment/listbilloil.php";				
-							break;																													
-					case "listbilloil2":
-							include "module/shipment/listbilloil2.php";				
-							break;																																									
-					case "slipmember-select":
-							include "module/shipment/slipmember-select.php";				
-							break;																													
-					case "slipmember-select2":
-							include "module/shipment/slipmember-select2.php";				
-							break;
-					case "listmember":
-							include "module/member/listmember.php";				
-							break;
-					case "reset_bill":
-							include "module/shipment/reset_bill.php";
-//							include "module/shipment/reset_bill_member.php";				
-							break;	
-					case "reset_bill_member":
-							include "module/shipment/reset_bill_member.php";				
-							break;							
-					case "reset_receipt":
-							include "module/shipment/reset_receipt.php";				
-							break;
-					case "reset_bill_oil":
-							include "module/shipment/reset_bill_oil.php";				
-							break;																										
-				}
+						<div class="col-xl-12 col-md-6 mb-4">
+							<?php
+							//echo $pagename;
+							switch ($pagename) {
+								case "0":
+									include "module/shipment/listall.php";
+									break;
+								case "listshipment":
+									include "module/shipment/listshipment.php";
+									break;
+								case "listshipment-select":
+									include "module/shipment/listshipment-select.php";
+									break;
+								case "listshipment-select2":
+									include "module/shipment/listshipment-select2.php";
+									break;
+								case "addshipment":
+									include "module/shipment/addshipment.php";
+									break;
+								case "addshipment2":
+									include "module/shipment/addshipment2.php";
+									break;
+								case "listbilling":
+									include "module/shipment/listbilling.php";
+									break;
+								case "listbilling-select":
+									include "module/shipment/listbilling-select.php";
+									break;
+								case "listbilling-select2":
+									include "module/shipment/listbilling-select2.php";
+									break;
+								case "receipt":
+									include "module/shipment/listreceipt.php";
+									break;
+								case "listcustomer":
+									include "module/customer/listcustomer.php";
+									break;
+								case "listdrivermember":
+									include "module/drivermember/listdrivermember.php";
+									break;
+								case "receipt":
+									include "module/shipment/listreceipt.php";
+									break;
+								case "listreceipt2":
+									include "module/shipment/listreceipt2.php";
+									break;
+								case "listbilloil":
+									include "module/shipment/listbilloil.php";
+									break;
+								case "listbilloil2":
+									include "module/shipment/listbilloil2.php";
+									break;
+								case "slipmember-select":
+									include "module/shipment/slipmember-select.php";
+									break;
+								case "slipmember-select2":
+									include "module/shipment/slipmember-select2.php";
+									break;
+								case "listmember":
+									include "module/member/listmember.php";
+									break;
+								case "reset_bill":
+									include "module/shipment/reset_bill.php";
+									//							include "module/shipment/reset_bill_member.php";				
+									break;
+								case "reset_bill_member":
+									include "module/shipment/reset_bill_member.php";
+									break;
+								case "reset_receipt":
+									include "module/shipment/reset_receipt.php";
+									break;
+								case "reset_bill_oil":
+									include "module/shipment/reset_bill_oil.php";
+									break;
+							}
 
-		?>
-        </div>
+							?>
+						</div>
 
-        </div>
-        <!-- /.container-fluid -->
-        
-      </div>
-      <!-- End of Main Content -->
+					</div>
+					<!-- /.container-fluid -->
 
-      <!-- Footer -->
-      <footer class="sticky-footer bg-white">
-        <div class="container my-auto">
-          <div class="copyright text-center my-auto">
-            <span>Copyright &copy; THE Logistics 2019</span>
-          </div>
-        </div>
-      </footer>
-      <!-- End of Footer -->
+				</div>
+				<!-- End of Main Content -->
 
-    </div>
-    <!-- End of Content Wrapper -->
+				<!-- Footer -->
+				<footer class="sticky-footer bg-white">
+					<div class="container my-auto">
+						<div class="copyright text-center my-auto">
+							<span>Copyright &copy; THE Logistics 2019</span>
+						</div>
+					</div>
+				</footer>
+				<!-- End of Footer -->
 
-  </div>
-  <!-- End of Page Wrapper -->
+			</div>
+			<!-- End of Content Wrapper -->
 
-  <!-- Scroll to Top Button-->
-  <a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-  </a>
+		</div>
+		<!-- End of Page Wrapper -->
 
-  <!-- Bootstrap core JavaScript-->
-  <script src="vendor/jquery/jquery.min.js"></script>
-  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+		<!-- Scroll to Top Button-->
+		<a class="scroll-to-top rounded" href="#page-top">
+			<i class="fas fa-angle-up"></i>
+		</a>
 
-  <!-- Core plugin JavaScript-->
-  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+		<!-- Bootstrap core JavaScript-->
+		<script src="vendor/jquery/jquery.min.js"></script>
+		<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-  <!-- Custom scripts for all pages-->
-  <script src="js/sb-admin-2.min.js"></script>
+		<!-- Core plugin JavaScript-->
+		<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 
-  <!-- Page level plugins -->
-  <script src="vendor/chart.js/Chart.min.js"></script>
+		<!-- Custom scripts for all pages-->
+		<script src="js/sb-admin-2.min.js"></script>
 
-  <!-- Page level custom scripts -->
-  <script src="js/demo/chart-area-demo.js"></script>
-  <script src="js/demo/chart-pie-demo.js"></script>
+		<!-- Page level plugins -->
+		<script src="vendor/chart.js/Chart.min.js"></script>
+
+		<!-- Page level custom scripts -->
+		<script src="js/demo/chart-area-demo.js"></script>
+		<script src="js/demo/chart-pie-demo.js"></script>
 
 </body>
 
