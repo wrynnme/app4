@@ -185,16 +185,15 @@ $queryString_listshipment = sprintf("&totalRows_listshipment=%d%s", $totalRows_l
 <head>
     <meta charset="utf-8">
     <title>จัดการใบส่งสินค้า</title>
-    <script src="https://unpkg.com/ionicons@4.5.9-1/dist/ionicons.js"></script>
     <script type="text/javascript">
-        function MM_openBrWindow(theURL, winName, features) { //v2.0
-            window.open(theURL, winName, features);
-        }
+    function MM_openBrWindow(theURL, winName, features) { //v2.0
+        window.open(theURL, winName, features);
+    }
 
-        function MM_jumpMenu(targ, selObj, restore) { //v3.0
-            eval(targ + ".location='" + selObj.options[selObj.selectedIndex].value + "'");
-            if (restore) selObj.selectedIndex = 0;
-        }
+    function MM_jumpMenu(targ, selObj, restore) { //v3.0
+        eval(targ + ".location='" + selObj.options[selObj.selectedIndex].value + "'");
+        if (restore) selObj.selectedIndex = 0;
+    }
     </script>
 
 
@@ -210,7 +209,8 @@ $queryString_listshipment = sprintf("&totalRows_listshipment=%d%s", $totalRows_l
                         <td colspan="6" align="center" bgcolor="#FFCCFF" class="h3">แสดงรายการเอกสาร</td>
                         <td colspan="2" align="center" bgcolor="#FFCCFF" class="h3">
                             <form name="form1" method="post" action="">
-                                <select name="status" class="small form-control" id="status" onChange="MM_jumpMenu('parent',this,0)">
+                                <select name="status" class="small form-control" id="status"
+                                    onChange="MM_jumpMenu('parent',this,0)">
                                     <option value="#">เลือกสถานะเอกสาร</option>
                                     <option value="index.php?pagename=0&status=999">ทั้งหมด</option>
                                     <option value="index.php?pagename=0&status=0">รอพิมพ์ใบส่งสินค้า</option>
@@ -242,15 +242,17 @@ $queryString_listshipment = sprintf("&totalRows_listshipment=%d%s", $totalRows_l
                         <td width="15%" align="center" bgcolor="#66FFFF" class="small">
                             <!--//เรียกข้อมูลหมายเลขใบส่งสินค้าเพื่อใช้ในการสร้าง Listbox ค้นหารายการสินค้า -->
                             <span class="h5">หมายเลขใบส่งสินค้า : </span>
-                            <select name="product_payment_id" id="product_payment_id" class="form-control selectpicker" data-live-search="true" onChange="MM_jumpMenu('parent',this,0)">
+                            <select name="product_payment_id" id="product_payment_id" class="form-control selectpicker"
+                                data-live-search="true" onChange="MM_jumpMenu('parent',this,0)">
                                 <option value="index.php?pagename=0&status=9999"><?php echo กรอกหมายเลขใบส่งสินค้า; ?>
                                 </option>
                                 <?php
                                 do {
                                 ?>
-                                    <option value="<?php echo "index.php?pagename=0&status=9999&product_payment_id=" . $row_show_product_payment_id['product_payment_id'] ?>">
-                                        <?php echo $row_show_product_payment_id['product_payment_id'] ?>
-                                    </option>
+                                <option
+                                    value="<?php echo "index.php?pagename=0&status=9999&product_payment_id=" . $row_show_product_payment_id['product_payment_id'] ?>">
+                                    <?php echo $row_show_product_payment_id['product_payment_id'] ?>
+                                </option>
                                 <?php
                                 } while ($row_show_product_payment_id = mysql_fetch_assoc($show_product_payment_id));
                                 $rows = mysql_num_rows($show_product_payment_id);
@@ -265,14 +267,16 @@ $queryString_listshipment = sprintf("&totalRows_listshipment=%d%s", $totalRows_l
                         <td align="center" bgcolor="#66FFFF" class="small">
                             <!--//เรียกข้อมูลลูกค้าเพื่อใช้ในการสร้าง Listbox ค้นหารายการสินค้า -->
                             <span class="h5">หมายเลขใบส่งสินค้า : </span>
-                            <select name="customer_id" id="customer_id" class="form-control selectpicker" data-live-search="true" onChange="MM_jumpMenu('parent',this,0)">
+                            <select name="customer_id" id="customer_id" class="form-control selectpicker"
+                                data-live-search="true" onChange="MM_jumpMenu('parent',this,0)">
                                 <option value="index.php?pagename=0&status=8888"><?php echo พิมพ์ชื่อลูกค้า; ?></option>
                                 <?php
                                 do {
                                 ?>
-                                    <option value="<?php echo "index.php?pagename=0&status=8888&customer_id=" . $row_list_customer['id'] ?>">
-                                        <?php echo $row_list_customer['name'] ?>
-                                    </option>
+                                <option
+                                    value="<?php echo "index.php?pagename=0&status=8888&customer_id=" . $row_list_customer['id'] ?>">
+                                    <?php echo $row_list_customer['name'] ?>
+                                </option>
                                 <?php
                                 } while ($row_list_customer = mysql_fetch_assoc($list_customer));
                                 $rows = mysql_num_rows($list_customer);
@@ -290,11 +294,12 @@ $queryString_listshipment = sprintf("&totalRows_listshipment=%d%s", $totalRows_l
                     ?>
 
                     <?php do { ?>
-                        <?php $count_numner = $count_numner + 1; ?>
-                        <tr>
-                            <td width="10%" align="center" bgcolor="#FFFFFF"><span class="small"><?php echo $row_listshipment['transaction_date']; ?></span></td>
+                    <?php $count_numner = $count_numner + 1; ?>
+                    <tr>
+                        <td width="10%" align="center" bgcolor="#FFFFFF"><span
+                                class="small"><?php echo $row_listshipment['transaction_date']; ?></span></td>
 
-                            <?php
+                        <?php
                             //เช็คเอกสารใบแจ้งหนี้ที่่ต้องพิมพ์หลังจากพิมพ์ใบสลิปให้คนขับรถแล้วและสถานะเอกสารเป็นสิ้นสุดแล้ว
                             if ((($row_listshipment['picturestatus3'] == "") and ($row_listshipment['picturestatus4'] == "")) and ($row_listshipment['status'] == "4")) {
                                 echo "<td width=15% align=center bgcolor=666666><span class=small>" . $row_listshipment['product_payment_id'] . "</span></td>";
@@ -314,17 +319,17 @@ $queryString_listshipment = sprintf("&totalRows_listshipment=%d%s", $totalRows_l
                                 }
                             }
                             ?>
-                            <td width="10%" align="left" bgcolor="#FFFFFF" class="small">
-                                <?php echo $row_listshipment['ref_product_payment_id']; ?></td>
-                            <td width="20%" align="left" bgcolor="#FFFFFF" class="small">
-                                <?php echo $row_listshipment['customer_name']; ?></td>
-                            <td width="15%" align="left" bgcolor="#FFFFFF" class="small">
-                                <?php echo $row_listshipment['customer_destination2']; ?></td>
-                            <td width="10%" align="center" bgcolor="#FFFFFF" class="small">
-                                <?php echo $row_listshipment['product_dateout']; ?></td>
-                            <td width="5%" align="center" bgcolor="#FFFFFF" class="small">
-                                <?php echo $row_listshipment['product_amount']; ?></td>
-                            <?php
+                        <td width="10%" align="left" bgcolor="#FFFFFF" class="small">
+                            <?php echo $row_listshipment['ref_product_payment_id']; ?></td>
+                        <td width="20%" align="left" bgcolor="#FFFFFF" class="small">
+                            <?php echo $row_listshipment['customer_name']; ?></td>
+                        <td width="15%" align="left" bgcolor="#FFFFFF" class="small">
+                            <?php echo $row_listshipment['customer_destination2']; ?></td>
+                        <td width="10%" align="center" bgcolor="#FFFFFF" class="small">
+                            <?php echo $row_listshipment['product_dateout']; ?></td>
+                        <td width="5%" align="center" bgcolor="#FFFFFF" class="small">
+                            <?php echo $row_listshipment['product_amount']; ?></td>
+                        <?php
                             //echo $row_listshipment['status'];
                             switch ($row_listshipment['status']) {
                                     //case "99" : $status_txt = "รอพิมพ์ใบส่งสินค้า"; $bg = "#FFFFFF" ; break;						
@@ -361,8 +366,8 @@ $queryString_listshipment = sprintf("&totalRows_listshipment=%d%s", $totalRows_l
                             }
 
                             ?>
-                            <td width="10%" bgcolor=" <?php echo $bg; ?>" align="center" class="small">
-                                <?php
+                        <td width="10%" bgcolor=" <?php echo $bg; ?>" align="center" class="small">
+                            <?php
                                 echo $status_txt;
                                 //echo $row_listshipment['status'];
                                 //switch ($row_listshipment['status']){
@@ -374,13 +379,14 @@ $queryString_listshipment = sprintf("&totalRows_listshipment=%d%s", $totalRows_l
                                 //}
 
                                 ?>
-                            </td>
-                            <td align="center" bgcolor="#FFFFFF">
-                                <a href="module/shipment/detelcustomer.php?id=<?php echo $row_listshipment['id']; ?>" target="thewiondows">
-                                    <ion-icon name="paper"></ion-icon>
-                                </a>
-                            </td>
-                        </tr>
+                        </td>
+                        <td align="center" bgcolor="#FFFFFF">
+                            <a href="module/shipment/detelcustomer.php?id=<?php echo $row_listshipment['id']; ?>"
+                                target="thewiondows">
+                                <ion-icon name="paper"></ion-icon>
+                            </a>
+                        </td>
+                    </tr>
 
                     <?php } while ($row_listshipment = mysql_fetch_assoc($listshipment)); ?>
                     <tr>
